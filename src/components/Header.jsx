@@ -1,7 +1,10 @@
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { AppBar, Badge, Box, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar, Badge, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 const visuallyHiddenSx = {
   position: 'absolute',
@@ -20,6 +23,8 @@ const navButtonSx = {
 
 function Header() {
   const { totalCount } = useCart();
+  const { mode, toggleMode } = useThemeMode();
+  const isDark = mode === 'dark';
 
   return (
     <AppBar position="static">
@@ -59,6 +64,14 @@ function Header() {
               , товаров: {totalCount}
             </Box>
           </Button>
+          <IconButton
+            color="inherit"
+            onClick={toggleMode}
+            aria-label={isDark ? 'Включить светлую тему' : 'Включить тёмную тему'}
+            aria-pressed={isDark}
+          >
+            {isDark ? <LightModeIcon /> : <DarkModeIcon />}
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>

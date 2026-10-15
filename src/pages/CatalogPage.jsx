@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { Alert, Box, Button, CircularProgress, Typography } from '@mui/material';
 import { getProducts } from '../api/productsApi';
 import CatalogControls from '../components/CatalogControls';
+import { useCart } from '../hooks/useCart';
 import ProductList from '../components/ProductList';
 import { getPreparedProducts } from '../utils/productUtils';
-
-const ADDED_COUNT_STORAGE_KEY = 'kr5-react-shop-added-count';
 
 function CatalogPage() {
   const [products, setProducts] = useState([]);
@@ -16,19 +15,8 @@ function CatalogPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortType, setSortType] = useState('default');
-  const [addedCount, setAddedCount] = useState(() => {
-    const savedCount = localStorage.getItem(ADDED_COUNT_STORAGE_KEY);
-
-    if (!savedCount) {
-      return 0;
-    }
-
-    return Number(savedCount) || 0;
-  });
-
-  useEffect(() => {
-    localStorage.setItem(ADDED_COUNT_STORAGE_KEY, String(addedCount));
-  }, [addedCount]);
+  const { totalCount, addToCart } = useCart();
+  const [addedMessage, setAddedMessage] = useState('');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -66,8 +54,8 @@ function CatalogPage() {
   }
 
   function handleAddToCart(product) {
-    console.log(`Товар добавлен: ${product.title}`);
-    setAddedCount((prevCount) => prevCount + 1);
+    addToCart(product);
+    setAddedMessage(`Товар «${product.title}» добавлен в корзину.`);
   }
 
   const visibleProducts = getPreparedProducts(
@@ -112,9 +100,15 @@ function CatalogPage() {
             Найдено товаров: <strong>{visibleProducts.length}</strong>
           </Typography>
           <Typography>
-            Добавлено товаров: <strong>{addedCount}</strong>
+            Товаров в корзине: <strong>{totalCount}</strong>
           </Typography>
         </Box>
+
+        {addedMessage && (
+          <Alert severity="success" aria-live="polite" onClose={() => setAddedMessage('')}>
+            {addedMessage}
+          </Alert>
+        )}
 
         <CatalogControls
           searchQuery={searchQuery}

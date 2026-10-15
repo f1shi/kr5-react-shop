@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import { getProductById } from '../api/productsApi';
+import { useCart } from '../hooks/useCart';
 
 function ProductPage() {
   const { productId } = useParams();
@@ -21,6 +22,8 @@ function ProductPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
+  const [isAdded, setIsAdded] = useState(false);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -134,9 +137,26 @@ function ProductPage() {
             <Typography variant="h5" component="p" sx={{ mb: 2 }}>
               {product.price.toLocaleString('ru-RU')} руб.
             </Typography>
-            <Button component={Link} to="/order" variant="contained">
-              Оставить заявку
-            </Button>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Button
+                variant="contained"
+                disabled={!product.isAvailable}
+                onClick={() => {
+                  addToCart(product);
+                  setIsAdded(true);
+                }}
+              >
+                {product.isAvailable ? 'В корзину' : 'Нет в наличии'}
+              </Button>
+              <Button component={Link} to="/order" variant="outlined">
+                Оставить заявку
+              </Button>
+            </Stack>
+            {isAdded && (
+              <Alert severity="success" sx={{ mt: 2 }} aria-live="polite">
+                Товар добавлен в корзину. <Link to="/cart">Перейти в корзину</Link>
+              </Alert>
+            )}
           </CardContent>
         </Card>
       </Stack>

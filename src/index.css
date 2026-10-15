@@ -9,3 +9,7 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   line-height: 1.5;
 }
+
+a {
+  color: inherit;
+}

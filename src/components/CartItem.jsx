@@ -29,7 +29,7 @@ function CartItem({ item, onChangeQuantity, onRemove }) {
       />
 
       <Box>
-        <Typography component={Link} to={`/catalog/${product.id}`} variant="subtitle1" color="inherit">
+        <Typography component={Link} to={`/catalog/${product.id}`} variant="subtitle1" sx={{ color: 'text.primary' }}>
           {product.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">

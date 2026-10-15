@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Alert, Box, Button, Typography } from '@mui/material';
+import { Alert, Box, Button, Pagination, Typography } from '@mui/material';
 import { getProducts } from '../api/productsApi';
 import CatalogControls from '../components/CatalogControls';
 import { useCart } from '../hooks/useCart';
 import ProductCardSkeleton from '../components/ProductCardSkeleton';
 import ProductList from '../components/ProductList';
 import { getPreparedProducts } from '../utils/productUtils';
+
+const PRODUCTS_PER_PAGE = 6;
 
 function CatalogPage() {
   const [products, setProducts] = useState([]);
@@ -16,6 +18,7 @@ function CatalogPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortType, setSortType] = useState('default');
+  const [page, setPage] = useState(1);
   const { totalCount, addToCart } = useCart();
   const [addedMessage, setAddedMessage] = useState('');
 
@@ -65,6 +68,20 @@ function CatalogPage() {
     selectedCategory,
     sortType
   );
+
+  const pageCount = Math.max(1, Math.ceil(visibleProducts.length / PRODUCTS_PER_PAGE));
+  const currentPage = Math.min(page, pageCount);
+  const pageProducts = visibleProducts.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE
+  );
+
+  function updateFilter(setter) {
+    return (value) => {
+      setter(value);
+      setPage(1);
+    };
+  }
 
   if (isLoading) {
     return (
@@ -125,15 +142,28 @@ function CatalogPage() {
           searchQuery={searchQuery}
           selectedCategory={selectedCategory}
           sortType={sortType}
-          onSearchChange={setSearchQuery}
-          onCategoryChange={setSelectedCategory}
-          onSortChange={setSortType}
+          onSearchChange={updateFilter(setSearchQuery)}
+          onCategoryChange={updateFilter(setSelectedCategory)}
+          onSortChange={updateFilter(setSortType)}
         />
 
         <ProductList
-          products={visibleProducts}
+          products={pageProducts}
           onAddToCart={handleAddToCart}
         />
+
+        {pageCount > 1 && (
+          <Pagination
+            count={pageCount}
+            page={currentPage}
+            onChange={(event, value) => setPage(value)}
+            color="primary"
+            sx={{ display: 'flex', justifyContent: 'center' }}
+            getItemAriaLabel={(type, itemPage) =>
+              type === 'page' ? `Страница ${itemPage}` : type === 'next' ? 'Следующая страница' : 'Предыдущая страница'
+            }
+          />
+        )}
       </section>
     </main>
   );

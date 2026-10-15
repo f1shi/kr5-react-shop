@@ -1,9 +1,72 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { products } from '../data/products';
+import { getProductById } from '../api/productsApi';
 
 function ProductPage() {
   const { productId } = useParams();
-  const product = products.find((item) => item.id === Number(productId));
+  const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProduct() {
+      try {
+        setIsLoading(true);
+        setError('');
+
+        const loadedProduct = await getProductById(productId, {
+          signal: controller.signal
+        });
+
+        setProduct(loadedProduct);
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          return;
+        }
+
+        setError(err.message || 'Не удалось загрузить товар.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadProduct();
+
+    return () => {
+      controller.abort();
+    };
+  }, [productId, reloadKey]);
+
+  function handleRetry() {
+    setReloadKey((prevKey) => prevKey + 1);
+  }
+
+  if (isLoading) {
+    return (
+      <main className="app-main">
+        <section className="product-page">
+          <p className="status-message">Загрузка товара...</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="app-main">
+        <section className="product-page">
+          <h2>Не удалось загрузить товар</h2>
+          <p className="status-message status-message--error">{error}</p>
+          <button className="button-link" type="button" onClick={handleRetry}>
+            Попробовать снова
+          </button>
+        </section>
+      </main>
+    );
+  }
 
   if (!product) {
     return (

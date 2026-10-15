@@ -1,17 +1,20 @@
+import { Button, Paper, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 function NotFoundPage() {
   return (
     <main className="app-main">
-      <section className="not-found-page">
-        <h2>Страница не найдена</h2>
-        <p>
+      <Paper elevation={2} sx={{ p: 4, display: 'grid', gap: 2 }}>
+        <Typography variant="h4" component="h2">
+          Страница не найдена
+        </Typography>
+        <Typography color="text.secondary">
           Возможно, адрес был введён неправильно или такой страницы больше не существует.
-        </p>
-        <Link className="button-link" to="/">
+        </Typography>
+        <Button component={Link} to="/" variant="contained" sx={{ justifySelf: 'start' }}>
           Вернуться на главную
-        </Link>
-      </section>
+        </Button>
+      </Paper>
     </main>
   );
 }

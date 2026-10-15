@@ -1,12 +1,15 @@
 import { useCallback, useMemo } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { getFinalPrice } from '../utils/priceUtils';
+import { PROMO_CODES } from '../utils/promoCodes';
 import { CartContext } from './cartContext';
 
 const CART_STORAGE_KEY = 'kr5-react-shop-cart';
+const PROMO_STORAGE_KEY = 'kr5-react-shop-promo';
 
 function CartProvider({ children }) {
   const [items, setItems] = useLocalStorage(CART_STORAGE_KEY, []);
+  const [promoCode, setPromoCode] = useLocalStorage(PROMO_STORAGE_KEY, '');
 
   const addToCart = useCallback((product) => {
     setItems((prevItems) => {
@@ -42,7 +45,27 @@ function CartProvider({ children }) {
 
   const clearCart = useCallback(() => {
     setItems([]);
-  }, [setItems]);
+    setPromoCode('');
+  }, [setItems, setPromoCode]);
+
+  const applyPromoCode = useCallback((code) => {
+    const normalizedCode = code.trim().toUpperCase();
+
+    if (normalizedCode === '') {
+      setPromoCode('');
+      return { ok: true, message: 'Промокод удалён.' };
+    }
+
+    if (!PROMO_CODES[normalizedCode]) {
+      return { ok: false, message: 'Такого промокода нет.' };
+    }
+
+    setPromoCode(normalizedCode);
+    return {
+      ok: true,
+      message: `Промокод ${normalizedCode} применён: скидка ${PROMO_CODES[normalizedCode]}%.`
+    };
+  }, [setPromoCode]);
 
   const value = useMemo(() => {
     const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -51,16 +74,23 @@ function CartProvider({ children }) {
       0
     );
 
+    const promoPercent = PROMO_CODES[promoCode] || 0;
+    const promoDiscount = Math.round(subtotal * promoPercent / 100);
+
     return {
       items,
       totalCount,
       subtotal,
+      promoCode,
+      promoDiscount,
+      total: subtotal - promoDiscount,
       addToCart,
       changeQuantity,
       removeFromCart,
-      clearCart
+      clearCart,
+      applyPromoCode
     };
-  }, [items, addToCart, changeQuantity, removeFromCart, clearCart]);
+  }, [items, promoCode, addToCart, changeQuantity, removeFromCart, clearCart, applyPromoCode]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

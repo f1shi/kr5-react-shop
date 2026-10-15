@@ -1,11 +1,30 @@
-import { Alert, Box, Button, Divider, Paper, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Alert, Box, Button, Divider, Paper, Stack, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import CartItem from '../components/CartItem';
 import { useCart } from '../hooks/useCart';
 import { formatPrice } from '../utils/priceUtils';
 
 function CartPage() {
-  const { items, totalCount, subtotal, changeQuantity, removeFromCart, clearCart } = useCart();
+  const {
+    items,
+    totalCount,
+    subtotal,
+    promoCode,
+    promoDiscount,
+    total,
+    changeQuantity,
+    removeFromCart,
+    clearCart,
+    applyPromoCode
+  } = useCart();
+  const [promoInput, setPromoInput] = useState(promoCode);
+  const [promoResult, setPromoResult] = useState(null);
+
+  function handlePromoSubmit(event) {
+    event.preventDefault();
+    setPromoResult(applyPromoCode(promoInput));
+  }
 
   if (items.length === 0) {
     return (
@@ -56,11 +75,41 @@ function CartPage() {
             <Typography>Товаров</Typography>
             <Typography>{totalCount}</Typography>
           </Stack>
+          <Stack direction="row" justifyContent="space-between">
+            <Typography>Сумма</Typography>
+            <Typography>{formatPrice(subtotal)}</Typography>
+          </Stack>
+          {promoDiscount > 0 && (
+            <Stack direction="row" justifyContent="space-between">
+              <Typography>Промокод {promoCode}</Typography>
+              <Typography color="success.main">−{formatPrice(promoDiscount)}</Typography>
+            </Stack>
+          )}
           <Divider />
           <Stack direction="row" justifyContent="space-between">
             <Typography sx={{ fontWeight: 700 }}>К оплате</Typography>
-            <Typography sx={{ fontWeight: 700 }}>{formatPrice(subtotal)}</Typography>
+            <Typography sx={{ fontWeight: 700 }}>{formatPrice(total)}</Typography>
           </Stack>
+
+          <Box component="form" onSubmit={handlePromoSubmit} noValidate sx={{ display: 'flex', gap: 1 }}>
+            <TextField
+              id="promo-code"
+              label="Промокод"
+              size="small"
+              value={promoInput}
+              onChange={(event) => setPromoInput(event.target.value)}
+              placeholder="STUDENT10"
+              fullWidth
+            />
+            <Button type="submit" variant="outlined">
+              Применить
+            </Button>
+          </Box>
+          {promoResult && (
+            <Alert severity={promoResult.ok ? 'success' : 'warning'} aria-live="polite">
+              {promoResult.message}
+            </Alert>
+          )}
           <Button component={Link} to="/order" variant="contained">
             Оформить заказ
           </Button>

@@ -16,6 +16,7 @@ function OrderPage() {
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formMessage, setFormMessage] = useState('');
+  const [formStatus, setFormStatus] = useState('warning');
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
 
   useEffect(() => {
@@ -71,12 +72,14 @@ function OrderPage() {
     setIsSubmitted(true);
 
     if (!isFormValid) {
+      setFormStatus('warning');
       setFormMessage('Проверьте поля формы.');
       return;
     }
 
     console.table(formData);
 
+    setFormStatus('success');
     setFormMessage('Заявка подготовлена. Данные выведены в консоль.');
     localStorage.removeItem(ORDER_DRAFT_STORAGE_KEY);
     setFormData(initialFormData);
@@ -152,7 +155,7 @@ function OrderPage() {
           </Stack>
 
           {formMessage && (
-            <Alert severity={isFormValid ? 'success' : 'warning'} aria-live="polite">
+            <Alert severity={formStatus} aria-live="polite">
               {formMessage}
             </Alert>
           )}

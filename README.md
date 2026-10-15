@@ -1,16 +1,60 @@
-# React + Vite
+# Контрольная работа №5
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Тема: «Компонентная frontend-разработка на React или Vue с подготовкой проекта к подключению backend API».
 
-Currently, two official plugins are available:
+## Практическая работа №19
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Выполнено:
 
-## React Compiler
+- создан проект `kr5-react-shop` через Vite;
+- проект запущен локально;
+- очищен демонстрационный шаблон;
+- подготовлена структура папки `src`;
+- создан файл `src/data/products.js`;
+- создан компонент `Header`;
+- создан компонент `ProductCard`;
+- создан компонент `ProductList`;
+- товары выводятся через React-компоненты;
+- данные передаются через props;
+- список товаров выводится через `map()`;
+- для элементов списка используется `key`;
+- добавлены базовые стили.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Структура проекта
 
-## Expanding the Oxlint configuration
+```text
+kr5-react-shop/
+├── public/
+│   └── images/
+├── src/
+│   ├── components/
+│   │   ├── Header.jsx
+│   │   ├── ProductCard.jsx
+│   │   └── ProductList.jsx
+│   ├── data/
+│   │   └── products.js
+│   ├── App.jsx
+│   ├── App.css
+│   ├── index.css
+│   └── main.jsx
+├── README.md
+└── package.json
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Связь с предыдущими контрольными работами
+
+Проект является SPA-версией интернет-магазина, который ранее разрабатывался в HTML/CSS и JavaScript. Товары перенесены из массива `products` проекта `kr4-js-shop`.
+
+На следующих этапах будут добавлены состояние, поиск, фильтрация, сортировка, формы, маршрутизация и API-слой.
+
+## Запуск
+
+```bash
+npm install
+npm run dev
+```
+
+## Автор
+
+ФИО: Рыбаков Фёдор Иванович
+Группа: эфбо-09-25

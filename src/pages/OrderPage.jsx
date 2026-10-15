@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Alert, Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material';
+import { createOrder } from '../api/ordersApi';
 import FormField from '../components/FormField';
+import { useCart } from '../hooks/useCart';
 import { validateOrderForm } from '../utils/formValidation';
+import { formatPrice, getFinalPrice } from '../utils/priceUtils';
 
 const ORDER_DRAFT_STORAGE_KEY = 'kr5-react-shop-order-draft';
 
@@ -18,6 +21,8 @@ function OrderPage() {
   const [formMessage, setFormMessage] = useState('');
   const [formStatus, setFormStatus] = useState('warning');
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const { items, total, promoCode, clearCart } = useCart();
 
   useEffect(() => {
     const savedDraft = localStorage.getItem(ORDER_DRAFT_STORAGE_KEY);
@@ -67,7 +72,7 @@ function OrderPage() {
     setFormMessage('');
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     setIsSubmitted(true);
 
@@ -77,13 +82,39 @@ function OrderPage() {
       return;
     }
 
-    console.table(formData);
+    const orderData = {
+      customer: formData,
+      items: items.map((item) => ({
+        productId: item.product.id,
+        title: item.product.title,
+        quantity: item.quantity,
+        price: getFinalPrice(item.product)
+      })),
+      promoCode,
+      total
+    };
 
-    setFormStatus('success');
-    setFormMessage('Заявка подготовлена. Данные выведены в консоль.');
-    localStorage.removeItem(ORDER_DRAFT_STORAGE_KEY);
-    setFormData(initialFormData);
-    setIsSubmitted(false);
+    try {
+      setIsSending(true);
+      setFormStatus('info');
+      setFormMessage('Отправляем заявку...');
+
+      const createdOrder = await createOrder(orderData);
+
+      console.table(createdOrder.items);
+
+      setFormStatus('success');
+      setFormMessage(`Заявка №${createdOrder.id} отправлена. Менеджер свяжется с вами.`);
+      localStorage.removeItem(ORDER_DRAFT_STORAGE_KEY);
+      setFormData(initialFormData);
+      setIsSubmitted(false);
+      clearCart();
+    } catch {
+      setFormStatus('error');
+      setFormMessage('Не удалось отправить заявку. Попробуйте ещё раз.');
+    } finally {
+      setIsSending(false);
+    }
   }
 
   function handleReset() {
@@ -104,6 +135,28 @@ function OrderPage() {
             Заполните форму. Данные сохраняются как черновик в браузере.
           </Typography>
         </Box>
+
+        {items.length > 0 && (
+          <Box component="section" aria-labelledby="order-cart-title">
+            <Typography id="order-cart-title" variant="h6" component="h3">
+              Товары в заявке
+            </Typography>
+            <List dense>
+              {items.map((item) => (
+                <ListItem key={item.product.id} disableGutters>
+                  <ListItemText
+                    primary={`${item.product.title} × ${item.quantity}`}
+                    secondary={formatPrice(getFinalPrice(item.product) * item.quantity)}
+                  />
+                </ListItem>
+              ))}
+            </List>
+            <Typography sx={{ fontWeight: 700 }}>
+              Итого: {formatPrice(total)}
+              {promoCode && ` (с промокодом ${promoCode})`}
+            </Typography>
+          </Box>
+        )}
 
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: 'grid', gap: 2 }}>
           <FormField
@@ -146,10 +199,15 @@ function OrderPage() {
           />
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <Button variant="contained" type="submit">
-              Отправить заявку
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isSending}
+              startIcon={isSending ? <CircularProgress size={18} color="inherit" /> : null}
+            >
+              {isSending ? 'Отправка...' : 'Отправить заявку'}
             </Button>
-            <Button variant="outlined" type="button" onClick={handleReset}>
+            <Button variant="outlined" type="button" onClick={handleReset} disabled={isSending}>
               Очистить черновик
             </Button>
           </Stack>

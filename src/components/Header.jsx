@@ -1,33 +1,52 @@
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { AppBar, Badge, Box, Button, Toolbar, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
+const navButtonSx = {
+  '&.active': {
+    backgroundColor: 'rgba(255, 255, 255, 0.18)'
+  }
+};
+
 function Header() {
-  const getLinkClassName = ({ isActive }) =>
-    isActive ? 'site-nav__link site-nav__link--active' : 'site-nav__link';
-
   return (
-    <header className="site-header">
-      <div className="site-header__inner">
-        <div className="site-header__brand">
-          <h1>React Shop</h1>
-          <p>Учебный интернет-магазин электроники на React.</p>
-        </div>
+    <AppBar position="static">
+      <Toolbar sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', py: 1 }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="h1">
+            React Shop
+          </Typography>
+          <Typography variant="body2" sx={{ opacity: 0.85 }}>
+            Учебный интернет-магазин электроники на React
+          </Typography>
+        </Box>
 
-        <nav className="site-nav" aria-label="Основная навигация">
-          <NavLink to="/" className={getLinkClassName} end>
+        <Box component="nav" aria-label="Основная навигация" sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          <Button component={NavLink} to="/" end color="inherit" sx={navButtonSx}>
             Главная
-          </NavLink>
-          <NavLink to="/catalog" className={getLinkClassName}>
+          </Button>
+          <Button component={NavLink} to="/catalog" color="inherit" sx={navButtonSx}>
             Каталог
-          </NavLink>
-          <NavLink to="/order" className={getLinkClassName}>
+          </Button>
+          <Button component={NavLink} to="/order" color="inherit" sx={navButtonSx}>
             Заявка
-          </NavLink>
-          <NavLink to="/cart" className={getLinkClassName}>
+          </Button>
+          <Button
+            component={NavLink}
+            to="/cart"
+            color="inherit"
+            sx={navButtonSx}
+            startIcon={
+              <Badge badgeContent={0} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            }
+          >
             Корзина
-          </NavLink>
-        </nav>
-      </div>
-    </header>
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
 

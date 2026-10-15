@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
+import { getProducts } from '../api/productsApi';
 import CatalogControls from '../components/CatalogControls';
 import ProductList from '../components/ProductList';
-import { products } from '../data/products';
 import { getPreparedProducts } from '../utils/productUtils';
 
 const ADDED_COUNT_STORAGE_KEY = 'kr5-react-shop-added-count';
 
 function CatalogPage() {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortType, setSortType] = useState('default');
@@ -24,6 +29,46 @@ function CatalogPage() {
     localStorage.setItem(ADDED_COUNT_STORAGE_KEY, String(addedCount));
   }, [addedCount]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProducts() {
+      try {
+        setIsLoading(true);
+        setError('');
+
+        const loadedProducts = await getProducts({
+          signal: controller.signal
+        });
+
+        setProducts(loadedProducts);
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          return;
+        }
+
+        setError(err.message || 'Не удалось загрузить товары.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      controller.abort();
+    };
+  }, [reloadKey]);
+
+  function handleRetry() {
+    setReloadKey((prevKey) => prevKey + 1);
+  }
+
+  function handleAddToCart(product) {
+    console.log(`Товар добавлен: ${product.title}`);
+    setAddedCount((prevCount) => prevCount + 1);
+  }
+
   const visibleProducts = getPreparedProducts(
     products,
     searchQuery,
@@ -31,9 +76,28 @@ function CatalogPage() {
     sortType
   );
 
-  function handleAddToCart(product) {
-    console.log(`Товар добавлен: ${product.title}`);
-    setAddedCount((prevCount) => prevCount + 1);
+  if (isLoading) {
+    return (
+      <main className="app-main">
+        <section className="catalog-page">
+          <p className="status-message">Загрузка товаров...</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="app-main">
+        <section className="catalog-page">
+          <h2>Не удалось загрузить каталог</h2>
+          <p className="status-message status-message--error">{error}</p>
+          <button className="button-link" type="button" onClick={handleRetry}>
+            Попробовать снова
+          </button>
+        </section>
+      </main>
+    );
   }
 
   return (

@@ -122,21 +122,76 @@
 
 Для внутренней навигации используется `Link` или `NavLink`, а не обычный тег `a`. Это позволяет выполнять переходы внутри SPA без полной перезагрузки страницы.
 
+## Практическая работа №23
+
+Тема: «Извлечение данных из API и их обработка — получение данных из API + отображение списка/деталей».
+
+Выполнено:
+
+- создан файл `public/products.json`;
+- данные товаров перенесены из `src/data/products.js` в JSON;
+- создана папка `src/api`;
+- создан файл `src/api/productsApi.js`;
+- реализована функция `requestJson`;
+- реализована функция `getProducts`;
+- реализована функция `getProductById`;
+- каталог получает товары через API-слой;
+- страница товара получает данные через API-слой;
+- реализованы состояния загрузки и ошибки;
+- реализована кнопка повторной загрузки;
+- используется `AbortController` для отмены запроса;
+- проект подготовлен к будущему подключению backend API.
+
+## Источник данных
+
+На текущем этапе используется mock-файл:
+
+```text
+public/products.json
+```
+
+В будущем его можно заменить на backend API:
+
+```text
+GET /api/products
+GET /api/products/:id
+```
+
+Файл `src/data/products.js` удалён: единственный источник данных — `public/products.json`.
+
+## API-слой
+
+- `src/api/productsApi.js` — функции получения товаров.
+- `getProducts()` — загрузка списка товаров.
+- `getProductById(productId)` — загрузка одного товара по идентификатору.
+
+Путь к JSON строится через `import.meta.env.BASE_URL`, чтобы запросы работали и локально, и на GitHub Pages.
+
+## Состояния загрузки
+
+В каталоге и на странице товара используются состояния:
+
+- `isLoading`;
+- `error`;
+- данные;
+- повторная загрузка через `reloadKey`.
+
 ## Структура проекта
 
 ```text
 kr5-react-shop/
 ├── public/
-│   └── images/
+│   ├── images/
+│   └── products.json
 ├── src/
+│   ├── api/
+│   │   └── productsApi.js
 │   ├── components/
 │   │   ├── CatalogControls.jsx
 │   │   ├── FormField.jsx
 │   │   ├── Header.jsx
 │   │   ├── ProductCard.jsx
 │   │   └── ProductList.jsx
-│   ├── data/
-│   │   └── products.js
 │   ├── pages/
 │   │   ├── CartPage.jsx
 │   │   ├── CatalogPage.jsx

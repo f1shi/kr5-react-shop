@@ -35,7 +35,7 @@ function ProductCard({ product, onAddToCart }) {
         <Typography variant="h6" component="p" sx={{ mb: 1 }}>
           {formattedPrice}
         </Typography>
-        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+        <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
           <Chip label={product.category} size="small" variant="outlined" />
           <Chip
             label={product.isAvailable ? 'В наличии' : 'Нет в наличии'}

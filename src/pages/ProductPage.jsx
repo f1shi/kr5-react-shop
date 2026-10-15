@@ -123,7 +123,7 @@ function ProductPage() {
             <Typography color="text.secondary" sx={{ mb: 2 }}>
               {product.description}
             </Typography>
-            <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 2 }}>
+            <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 2 }}>
               <Chip label={product.category} variant="outlined" />
               <Chip
                 label={product.isAvailable ? 'В наличии' : 'Нет в наличии'}

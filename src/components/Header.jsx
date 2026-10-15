@@ -1,6 +1,16 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppBar, Badge, Box, Button, Toolbar, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { useCart } from '../hooks/useCart';
+
+const visuallyHiddenSx = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap'
+};
 
 const navButtonSx = {
   '&.active': {
@@ -9,6 +19,8 @@ const navButtonSx = {
 };
 
 function Header() {
+  const { totalCount } = useCart();
+
   return (
     <AppBar position="static">
       <Toolbar sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', py: 1 }}>
@@ -37,12 +49,15 @@ function Header() {
             color="inherit"
             sx={navButtonSx}
             startIcon={
-              <Badge badgeContent={0} color="secondary">
+              <Badge badgeContent={totalCount} color="secondary" showZero>
                 <ShoppingCartIcon />
               </Badge>
             }
           >
             Корзина
+            <Box component="span" sx={visuallyHiddenSx}>
+              , товаров: {totalCount}
+            </Box>
           </Button>
         </Box>
       </Toolbar>

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormField from '../components/FormField';
 import { validateOrderForm } from '../utils/formValidation';
+
+const ORDER_DRAFT_STORAGE_KEY = 'kr5-react-shop-order-draft';
 
 const initialFormData = {
   name: '',
@@ -13,6 +15,41 @@ function OrderPage() {
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formMessage, setFormMessage] = useState('');
+  const [isDraftLoaded, setIsDraftLoaded] = useState(false);
+
+  useEffect(() => {
+    const savedDraft = localStorage.getItem(ORDER_DRAFT_STORAGE_KEY);
+
+    if (savedDraft) {
+      try {
+        const parsedDraft = JSON.parse(savedDraft);
+
+        setFormData({
+          ...initialFormData,
+          ...parsedDraft
+        });
+      } catch {
+        localStorage.removeItem(ORDER_DRAFT_STORAGE_KEY);
+      }
+    }
+
+    setIsDraftLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isDraftLoaded) {
+      return;
+    }
+
+    const hasDraftData = Object.values(formData).some((value) => value.trim() !== '');
+
+    if (!hasDraftData) {
+      localStorage.removeItem(ORDER_DRAFT_STORAGE_KEY);
+      return;
+    }
+
+    localStorage.setItem(ORDER_DRAFT_STORAGE_KEY, JSON.stringify(formData));
+  }, [formData, isDraftLoaded]);
 
   const errors = validateOrderForm(formData);
   const isFormValid = Object.keys(errors).length === 0;
@@ -40,6 +77,7 @@ function OrderPage() {
     console.table(formData);
 
     setFormMessage('Заявка подготовлена. Данные выведены в консоль.');
+    localStorage.removeItem(ORDER_DRAFT_STORAGE_KEY);
     setFormData(initialFormData);
     setIsSubmitted(false);
   }
@@ -48,6 +86,7 @@ function OrderPage() {
     setFormData(initialFormData);
     setFormMessage('');
     setIsSubmitted(false);
+    localStorage.removeItem(ORDER_DRAFT_STORAGE_KEY);
   }
 
   return (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Alert, Box, Button, Paper, Stack, Typography } from '@mui/material';
 import FormField from '../components/FormField';
 import { validateOrderForm } from '../utils/formValidation';
 
@@ -91,13 +92,17 @@ function OrderPage() {
 
   return (
     <main className="app-main">
-      <section className="order-page">
-        <div className="order-page__header">
-          <h2>Заявка на консультацию</h2>
-          <p>Заполните форму. Данные сохраняются как черновик в браузере.</p>
-        </div>
+      <Paper component="section" elevation={2} sx={{ p: 3, display: 'grid', gap: 3 }}>
+        <Box>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Заявка на консультацию
+          </Typography>
+          <Typography color="text.secondary">
+            Заполните форму. Данные сохраняются как черновик в браузере.
+          </Typography>
+        </Box>
 
-        <form className="order-form" onSubmit={handleSubmit} noValidate>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: 'grid', gap: 2 }}>
           <FormField
             label="Имя"
             name="name"
@@ -137,22 +142,22 @@ function OrderPage() {
             as="textarea"
           />
 
-          <div className="order-form__actions">
-            <button className="order-form__submit" type="submit">
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <Button variant="contained" type="submit">
               Отправить заявку
-            </button>
-            <button className="order-form__reset" type="button" onClick={handleReset}>
+            </Button>
+            <Button variant="outlined" type="button" onClick={handleReset}>
               Очистить черновик
-            </button>
-          </div>
+            </Button>
+          </Stack>
 
           {formMessage && (
-            <p className="form-message" aria-live="polite">
+            <Alert severity={isFormValid ? 'success' : 'warning'} aria-live="polite">
               {formMessage}
-            </p>
+            </Alert>
           )}
-        </form>
-      </section>
+        </Box>
+      </Paper>
     </main>
   );
 }

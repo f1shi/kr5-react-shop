@@ -17,7 +17,7 @@ const visuallyHiddenSx = {
 
 const navButtonSx = {
   '&.active': {
-    backgroundColor: 'rgba(255, 255, 255, 0.18)'
+    backgroundColor: 'rgba(0, 0, 0, 0.25)'
   }
 };
 
@@ -33,7 +33,7 @@ function Header() {
           <Typography variant="h6" component="h1">
             React Shop
           </Typography>
-          <Typography variant="body2" sx={{ opacity: 0.85 }}>
+          <Typography variant="body2">
             Учебный интернет-магазин электроники на React
           </Typography>
         </Box>

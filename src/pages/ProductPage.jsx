@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import { getProductById } from '../api/productsApi';
+import ProductPrice from '../components/ProductPrice';
 import { useCart } from '../hooks/useCart';
 
 function ProductPage() {
@@ -128,15 +129,18 @@ function ProductPage() {
             </Typography>
             <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 2 }}>
               <Chip label={product.category} variant="outlined" />
+              {product.discountPercent > 0 && (
+                <Chip label={`Скидка ${product.discountPercent}%`} color="error" />
+              )}
               <Chip
                 label={product.isAvailable ? 'В наличии' : 'Нет в наличии'}
                 color={product.isAvailable ? 'success' : 'default'}
               />
               <Chip label={`Рейтинг ${product.rating}`} color="secondary" variant="outlined" />
             </Stack>
-            <Typography variant="h5" component="p" sx={{ mb: 2 }}>
-              {product.price.toLocaleString('ru-RU')} руб.
-            </Typography>
+            <Box sx={{ mb: 2 }}>
+              <ProductPrice product={product} variant="h5" />
+            </Box>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <Button
                 variant="contained"

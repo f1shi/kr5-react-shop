@@ -10,10 +10,9 @@ import {
   Typography
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import ProductPrice from './ProductPrice';
 
 function ProductCard({ product, onAddToCart }) {
-  const formattedPrice = `${product.price.toLocaleString('ru-RU')} руб.`;
-
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {product.image && (
@@ -32,11 +31,14 @@ function ProductCard({ product, onAddToCart }) {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {product.description}
         </Typography>
-        <Typography variant="h6" component="p" sx={{ mb: 1 }}>
-          {formattedPrice}
-        </Typography>
+        <Box sx={{ mb: 1 }}>
+          <ProductPrice product={product} />
+        </Box>
         <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
           <Chip label={product.category} size="small" variant="outlined" />
+          {product.discountPercent > 0 && (
+            <Chip label={`−${product.discountPercent}%`} color="error" size="small" />
+          )}
           <Chip
             label={product.isAvailable ? 'В наличии' : 'Нет в наличии'}
             color={product.isAvailable ? 'success' : 'default'}

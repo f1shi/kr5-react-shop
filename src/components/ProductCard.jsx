@@ -10,6 +10,7 @@ import {
   Typography
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { getCategoryLabel } from '../utils/categories';
 import ProductPrice from './ProductPrice';
 
 function ProductCard({ product, onAddToCart }) {
@@ -35,7 +36,7 @@ function ProductCard({ product, onAddToCart }) {
           <ProductPrice product={product} />
         </Box>
         <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
-          <Chip label={product.category} size="small" variant="outlined" />
+          <Chip label={getCategoryLabel(product.category)} size="small" variant="outlined" />
           {product.discountPercent > 0 && (
             <Chip label={`−${product.discountPercent}%`} color="error" size="small" />
           )}

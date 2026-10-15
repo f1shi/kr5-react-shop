@@ -15,6 +15,7 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import { getProductById } from '../api/productsApi';
 import ProductPrice from '../components/ProductPrice';
+import { getCategoryLabel } from '../utils/categories';
 import { useCart } from '../hooks/useCart';
 
 function ProductPage() {
@@ -128,7 +129,7 @@ function ProductPage() {
               {product.description}
             </Typography>
             <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 2 }}>
-              <Chip label={product.category} variant="outlined" />
+              <Chip label={getCategoryLabel(product.category)} variant="outlined" />
               {product.discountPercent > 0 && (
                 <Chip label={`Скидка ${product.discountPercent}%`} color="error" />
               )}

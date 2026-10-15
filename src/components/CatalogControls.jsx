@@ -1,4 +1,5 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { CATEGORIES } from '../utils/categories';
 
 function CatalogControls({
   searchQuery,
@@ -42,10 +43,11 @@ function CatalogControls({
           onChange={(event) => onCategoryChange(event.target.value)}
         >
           <MenuItem value="all">Все категории</MenuItem>
-          <MenuItem value="smartphones">Смартфоны</MenuItem>
-          <MenuItem value="laptops">Ноутбуки</MenuItem>
-          <MenuItem value="headphones">Наушники</MenuItem>
-          <MenuItem value="accessories">Аксессуары</MenuItem>
+          {CATEGORIES.map((category) => (
+            <MenuItem key={category.value} value={category.value}>
+              {category.label}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 

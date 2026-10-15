@@ -5,9 +5,16 @@
 }
 
 .site-header {
-  padding: 32px 16px;
+  padding: 24px 16px;
   background-color: #111827;
   color: #ffffff;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .site-header__inner,
@@ -16,13 +23,35 @@
   margin-inline: auto;
 }
 
-.site-header h1 {
-  margin: 0 0 8px;
+.site-header__brand h1,
+.site-header__brand p {
+  margin: 0;
 }
 
-.site-header p {
-  margin: 0;
+.site-header__brand p {
   color: #d1d5db;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-nav__link {
+  color: #d1d5db;
+  text-decoration: none;
+}
+
+.site-nav__link:hover,
+.site-nav__link:focus-visible {
+  color: #ffffff;
+}
+
+.site-nav__link--active {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .app-main {
@@ -234,4 +263,108 @@
   background-color: #eff6ff;
   border: 1px solid #bfdbfe;
   border-radius: 8px;
+}
+
+.home-page,
+.cart-page,
+.not-found-page,
+.product-page {
+  display: grid;
+  gap: 20px;
+}
+
+.home-page__actions,
+.product-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.product-card__actions {
+  margin-top: auto;
+}
+
+.product-card__actions .product-card__button {
+  margin-top: 0;
+}
+
+.product-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-card__title a:hover {
+  text-decoration: underline;
+}
+
+.button-link,
+.product-card__link,
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  text-decoration: none;
+}
+
+.button-link {
+  padding: 10px 14px;
+  color: #ffffff;
+  background-color: #2563eb;
+  border-radius: 8px;
+}
+
+.button-link--secondary {
+  color: #1f2937;
+  background-color: #e5e7eb;
+}
+
+.product-card__link {
+  padding: 10px 12px;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+}
+
+.back-link {
+  color: #2563eb;
+}
+
+.product-details {
+  display: grid;
+  grid-template-columns: minmax(240px, 420px) 1fr;
+  gap: 24px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+}
+
+.product-details__image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.product-details__content {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.product-details__content h2,
+.product-details__content p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .site-header__inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .product-details {
+    grid-template-columns: 1fr;
+  }
 }

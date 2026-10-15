@@ -1,8 +1,12 @@
 import ProductCard from './ProductCard';
 
-function ProductList({ products }) {
+function ProductList({ products, onAddToCart }) {
   if (products.length === 0) {
-    return <p className="products-empty">Товары не найдены.</p>;
+    return (
+      <p className="products-empty">
+        По выбранным условиям товары не найдены.
+      </p>
+    );
   }
 
   return (
@@ -10,7 +14,11 @@ function ProductList({ products }) {
       <h2 id="products-title">Каталог товаров</h2>
       <div className="products-grid">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={onAddToCart}
+          />
         ))}
       </div>
     </section>

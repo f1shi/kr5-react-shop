@@ -1,4 +1,4 @@
-function ProductCard({ product }) {
+function ProductCard({ product, onAddToCart }) {
   const formattedPrice = `${product.price.toLocaleString('ru-RU')} руб.`;
 
   return (
@@ -21,6 +21,14 @@ function ProductCard({ product }) {
         <p className="product-card__status">
           {product.isAvailable ? 'В наличии' : 'Нет в наличии'}
         </p>
+        <button
+          className="product-card__button"
+          type="button"
+          disabled={!product.isAvailable}
+          onClick={() => onAddToCart(product)}
+        >
+          {product.isAvailable ? 'Добавить' : 'Недоступно'}
+        </button>
       </div>
     </article>
   );

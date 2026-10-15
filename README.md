@@ -1,6 +1,160 @@
-# Контрольная работа №5
+# КР №5. SPA интернет-магазина на React
 
-Тема: «Компонентная frontend-разработка на React или Vue с подготовкой проекта к подключению backend API».
+## Контрольная работа №5
+
+**Тема:** «Компонентная frontend-разработка на React или Vue с подготовкой проекта к подключению backend API».
+
+**Дисциплина:** Фронтенд и бэкенд разработка
+**Институт:** ИПТИП
+**Кафедра:** Индустриального программирования
+**Преподаватель:** Загородних Николай Анатольевич
+**Семестр:** 3 семестр, 2026/2027 уч. год
+
+## Студент
+
+ФИО: Рыбаков Фёдор Иванович
+Группа: эфбо-09-25
+
+## Выбранный вариант
+
+React (React 19 + Vite, React Router, Material UI).
+
+Дополнительно выполнен учебный Vue-вариант (практические занятия №25–26) в отдельном репозитории: https://github.com/f1shi/kr5-vue-shop
+
+## Описание проекта
+
+Учебное SPA-приложение интернет-магазина электроники, разработанное в рамках дисциплины «Фронтенд и бэкенд разработка». Проект продолжает предметную область КР №1–№4: каталог из 10 товаров (смартфоны, ноутбуки, наушники, аксессуары), карточки, поиск, фильтры, корзина и форма заявки.
+
+## Ссылка на опубликованный проект
+
+**GitHub Pages:** https://f1shi.github.io/kr5-react-shop/
+
+Публикация выполняется автоматически через GitHub Actions (`.github/workflows/deploy.yml`) при каждом изменении ветки `main`.
+
+## Запуск проекта
+
+```bash
+npm install
+npm run dev
+```
+
+Сборка и проверка:
+
+```bash
+npm run build
+npm run lint
+```
+
+## Основные возможности
+
+- каталог товаров;
+- поиск;
+- фильтрация по категории;
+- сортировка по цене и названию;
+- страница товара;
+- корзина;
+- форма заявки с валидацией;
+- маршрутизация;
+- страница 404;
+- API-слой и подготовка к backend API.
+
+## Маршруты
+
+| Маршрут | Компонент | Назначение |
+|---|---|---|
+| `/` | `HomePage` | главная страница, ссылки на категории |
+| `/catalog` | `CatalogPage` | каталог товаров |
+| `/catalog?category=laptops&sort=price-asc&page=2` | `CatalogPage` | каталог с фильтрами из адресной строки |
+| `/catalog/:productId` | `ProductPage` | подробная страница товара |
+| `/order` | `OrderPage` | форма заявки |
+| `/cart` | `CartPage` | корзина |
+| `*` | `NotFoundPage` | страница 404 |
+
+## Структура проекта
+
+```text
+kr5-react-shop/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+├── public/
+│   ├── images/
+│   └── products.json
+├── src/
+│   ├── api/
+│   │   ├── ordersApi.js
+│   │   └── productsApi.js
+│   ├── components/
+│   │   ├── CartItem.jsx
+│   │   ├── CatalogControls.jsx
+│   │   ├── FormField.jsx
+│   │   ├── Header.jsx
+│   │   ├── ProductCard.jsx
+│   │   ├── ProductCardSkeleton.jsx
+│   │   ├── ProductList.jsx
+│   │   └── ProductPrice.jsx
+│   ├── context/
+│   │   ├── CartProvider.jsx
+│   │   ├── cartContext.js
+│   │   ├── ThemeModeProvider.jsx
+│   │   └── themeModeContext.js
+│   ├── hooks/
+│   │   ├── useCart.js
+│   │   ├── useLocalStorage.js
+│   │   └── useThemeMode.js
+│   ├── pages/
+│   │   ├── CartPage.jsx
+│   │   ├── CatalogPage.jsx
+│   │   ├── HomePage.jsx
+│   │   ├── NotFoundPage.jsx
+│   │   ├── OrderPage.jsx
+│   │   └── ProductPage.jsx
+│   ├── theme/
+│   │   └── muiTheme.js
+│   ├── utils/
+│   │   ├── categories.js
+│   │   ├── formValidation.js
+│   │   ├── priceUtils.js
+│   │   ├── productUtils.js
+│   │   └── promoCodes.js
+│   ├── App.jsx
+│   ├── App.css
+│   ├── index.css
+│   └── main.jsx
+├── README.md
+└── package.json
+```
+
+## Компоненты
+
+| Компонент | Назначение |
+|---|---|
+| `Header` | шапка, навигация через `NavLink`, счётчик корзины, переключатель темы |
+| `CatalogControls` | поиск, фильтр категории и сортировка (controlled-поля) |
+| `ProductList` | список карточек, пустое состояние |
+| `ProductCard` | карточка товара: изображение, цена со скидкой, чипы, кнопки |
+| `ProductPrice` | цена со скидкой и зачёркнутая старая цена |
+| `ProductCardSkeleton` | заглушка карточки во время загрузки |
+| `CartItem` | строка корзины с изменением количества и удалением |
+| `FormField` | поле формы на `TextField` с ошибкой в `helperText` |
+| `CartProvider` | состояние корзины и промокода, сохранение в `localStorage` |
+| `ThemeModeProvider` | светлая и тёмная тема Material UI |
+
+## Данные и API-слой
+
+- `public/products.json` — mock-данные 10 товаров.
+- `src/api/productsApi.js` — `getProducts()` и `getProductById(productId)` через `fetch`, проверка `response.ok`, отмена запроса через `AbortController`.
+- `src/api/ordersApi.js` — `createOrder(orderData)`, имитация `POST /api/orders` с задержкой.
+
+Для подключения backend достаточно заменить URL в API-слое на `GET /api/products`, `GET /api/products/:id` и `POST /api/orders`: компоненты от источника данных не зависят.
+
+## Поиск, фильтрация и сортировка
+
+Функции в `src/utils/productUtils.js` не зависят от React: `searchProducts`, `filterProductsByCategory`, `sortProducts`, `getPreparedProducts`. `CatalogPage` хранит состояние через `useState`, вычисляет `visibleProducts` и синхронизирует фильтры с адресной строкой через `useSearchParams`.
+
+## Форма заявки
+
+Controlled-форма на `FormField`, валидация в `src/utils/formValidation.js` (имя, e-mail, телефон, комментарий), ошибки после попытки отправки, черновик в `localStorage`, сообщения через `Alert`.
 
 ## Практическая работа №19
 
@@ -227,56 +381,36 @@ Material UI используется как слой интерфейсных к
 
 Активный пункт меню подсвечивается через класс `active`, который `NavLink` добавляет автоматически, и селектор `&.active` в `sx`. Тип сообщения формы хранится в отдельном состоянии `formStatus`, чтобы после успешной отправки и очистки формы сообщение оставалось зелёным.
 
-## Структура проекта
+## Практическая работа №27
 
-```text
-kr5-react-shop/
-├── public/
-│   ├── images/
-│   └── products.json
-├── src/
-│   ├── api/
-│   │   └── productsApi.js
-│   ├── components/
-│   │   ├── CatalogControls.jsx
-│   │   ├── FormField.jsx
-│   │   ├── Header.jsx
-│   │   ├── ProductCard.jsx
-│   │   └── ProductList.jsx
-│   ├── theme/
-│   │   └── muiTheme.js
-│   ├── pages/
-│   │   ├── CartPage.jsx
-│   │   ├── CatalogPage.jsx
-│   │   ├── HomePage.jsx
-│   │   ├── NotFoundPage.jsx
-│   │   ├── OrderPage.jsx
-│   │   └── ProductPage.jsx
-│   ├── utils/
-│   │   ├── formValidation.js
-│   │   └── productUtils.js
-│   ├── App.jsx
-│   ├── App.css
-│   ├── index.css
-│   └── main.jsx
-├── README.md
-└── package.json
-```
+Выполнена подготовка КР №5 к сдаче и самостоятельные доработки.
 
-## Связь с предыдущими контрольными работами
+## Самостоятельные доработки
 
-Проект является SPA-версией интернет-магазина, который ранее разрабатывался в HTML/CSS и JavaScript. Товары перенесены из массива `products` проекта `kr4-js-shop`.
+1. **Полноценная корзина** на React Context: добавление из каталога и со страницы товара, изменение количества, удаление, очистка, пустое состояние.
+2. **Расчёт суммы корзины** через `reduce` с учётом скидок товаров.
+3. **Промокоды** `STUDENT10` (10%) и `REACT5` (5%) с проверкой ввода и пересчётом итоговой суммы.
+4. **Хук `useLocalStorage`**: корзина, промокод, тема и черновик формы сохраняются между перезагрузками.
+5. **Счётчик товаров** в шапке через `Badge`.
+6. **Цены со скидкой**: отдельный компонент `ProductPrice`, чип со скидкой, зачёркнутая старая цена.
+7. **Skeleton-загрузка** каталога вместо простого индикатора.
+8. **Пагинация** каталога по 6 товаров через `Pagination`.
+9. **Фильтры в адресной строке** через `useSearchParams`: ссылкой можно поделиться, на главной есть ссылки на категории.
+10. **Тёмная тема** Material UI с сохранением выбора.
+11. **API заказов** `createOrder` и имитация отправки заявки: состояние загрузки, номер заявки, очистка формы и корзины, товары корзины в заявке.
+12. **Названия категорий на русском** из общего справочника `src/utils/categories.js`.
+13. **Доступность**: Lighthouse Accessibility 100 на всех маршрутах, подписи у иконок-кнопок, `aria-live` у сообщений.
+14. **Деплой** на GitHub Pages через GitHub Actions с SPA-fallback `404.html`.
 
-На следующих этапах будут добавлены состояние, поиск, фильтрация, сортировка, формы, маршрутизация и API-слой.
+## Как проверить
 
-## Запуск
-
-```bash
-npm install
-npm run dev
-```
-
-## Автор
-
-ФИО: Рыбаков Фёдор Иванович
-Группа: эфбо-09-25
+1. Открыть ссылку GitHub Pages или запустить `npm run dev`.
+2. Открыть `/catalog`, ввести «ноут», выбрать категорию и сортировку, переключить страницу и проверить адресную строку.
+3. Ввести «zzz» и проверить пустое состояние.
+4. Добавить несколько товаров и проверить счётчик в шапке.
+5. Открыть `/catalog/1` и `/catalog/999`.
+6. Открыть `/cart`, изменить количество, применить промокод `STUDENT10`, перезагрузить страницу.
+7. Перейти в `/order`, отправить пустую форму, затем заполнить её и отправить.
+8. Включить тёмную тему кнопкой в шапке.
+9. Открыть `/unknown-page`.
+10. В DevTools → Network включить медленную сеть и проверить skeleton-загрузку; заблокировать `products.json` и проверить ошибку и кнопку «Попробовать снова».

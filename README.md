@@ -176,6 +176,57 @@ GET /api/products/:id
 - данные;
 - повторная загрузка через `reloadKey`.
 
+## Практическая работа №24
+
+Тема: «React forms + Material UI: улучшение интерфейса, доступные формы, сообщения об ошибках и единый визуальный стиль приложения».
+
+Выполнено:
+
+- установлен Material UI;
+- установлены зависимости `@emotion/react`, `@emotion/styled`;
+- установлены иконки `@mui/icons-material`;
+- создана тема `src/theme/muiTheme.js`;
+- приложение обёрнуто в `ThemeProvider`;
+- подключён `CssBaseline`;
+- обновлён компонент `Header`;
+- обновлены карточки товаров;
+- обновлены элементы управления каталогом;
+- обновлена форма заявки;
+- ошибки формы выводятся через `error` и `helperText`;
+- сообщения формы выводятся через `Alert`;
+- состояния загрузки и ошибки отображаются через компоненты Material UI;
+- React Router и API-слой сохранены;
+- удалены собственные стили, которые заменили компоненты Material UI.
+
+## Использованные компоненты Material UI
+
+- `AppBar`
+- `Toolbar`
+- `Box`
+- `Stack`
+- `Card`
+- `CardContent`
+- `CardActions`
+- `CardMedia`
+- `Typography`
+- `Button`
+- `Chip`
+- `TextField`
+- `FormControl`
+- `InputLabel`
+- `Select`
+- `MenuItem`
+- `Alert`
+- `CircularProgress`
+- `Paper`
+- `Badge`
+
+## Примечание
+
+Material UI используется как слой интерфейсных компонентов. Логика приложения остаётся в React-компонентах, API-слое, утилитах и состоянии.
+
+Активный пункт меню подсвечивается через класс `active`, который `NavLink` добавляет автоматически, и селектор `&.active` в `sx`. Тип сообщения формы хранится в отдельном состоянии `formStatus`, чтобы после успешной отправки и очистки формы сообщение оставалось зелёным.
+
 ## Структура проекта
 
 ```text
@@ -192,6 +243,8 @@ kr5-react-shop/
 │   │   ├── Header.jsx
 │   │   ├── ProductCard.jsx
 │   │   └── ProductList.jsx
+│   ├── theme/
+│   │   └── muiTheme.js
 │   ├── pages/
 │   │   ├── CartPage.jsx
 │   │   ├── CatalogPage.jsx

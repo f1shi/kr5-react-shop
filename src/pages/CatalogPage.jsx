@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Alert, Box, Button, CircularProgress, Typography } from '@mui/material';
 import { getProducts } from '../api/productsApi';
 import CatalogControls from '../components/CatalogControls';
 import ProductList from '../components/ProductList';
@@ -79,9 +80,10 @@ function CatalogPage() {
   if (isLoading) {
     return (
       <main className="app-main">
-        <section className="catalog-page">
-          <p className="status-message">Загрузка товаров...</p>
-        </section>
+        <Box sx={{ display: 'grid', placeItems: 'center', minHeight: 240 }}>
+          <CircularProgress />
+          <Typography sx={{ mt: 2 }}>Загрузка товаров...</Typography>
+        </Box>
       </main>
     );
   }
@@ -89,13 +91,12 @@ function CatalogPage() {
   if (error) {
     return (
       <main className="app-main">
-        <section className="catalog-page">
-          <h2>Не удалось загрузить каталог</h2>
-          <p className="status-message status-message--error">{error}</p>
-          <button className="button-link" type="button" onClick={handleRetry}>
+        <Box sx={{ display: 'grid', gap: 2 }}>
+          <Alert severity="error">Не удалось загрузить каталог: {error}</Alert>
+          <Button variant="contained" type="button" onClick={handleRetry}>
             Попробовать снова
-          </button>
-        </section>
+          </Button>
+        </Box>
       </main>
     );
   }
@@ -103,15 +104,17 @@ function CatalogPage() {
   return (
     <main className="app-main">
       <section className="catalog-page">
-        <div className="catalog-page__header">
-          <h2>Каталог товаров</h2>
-          <p>
+        <Box className="catalog-page__header">
+          <Typography variant="h4" component="h2">
+            Каталог товаров
+          </Typography>
+          <Typography>
             Найдено товаров: <strong>{visibleProducts.length}</strong>
-          </p>
-          <p>
+          </Typography>
+          <Typography>
             Добавлено товаров: <strong>{addedCount}</strong>
-          </p>
-        </div>
+          </Typography>
+        </Box>
 
         <CatalogControls
           searchQuery={searchQuery}

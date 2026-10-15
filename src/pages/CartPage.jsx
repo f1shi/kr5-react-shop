@@ -71,22 +71,22 @@ function CartPage() {
           <Typography variant="h6" component="h3">
             Итого
           </Typography>
-          <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
             <Typography>Товаров</Typography>
             <Typography>{totalCount}</Typography>
           </Stack>
-          <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
             <Typography>Сумма</Typography>
             <Typography>{formatPrice(subtotal)}</Typography>
           </Stack>
           {promoDiscount > 0 && (
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
               <Typography>Промокод {promoCode}</Typography>
               <Typography color="success.main">−{formatPrice(promoDiscount)}</Typography>
             </Stack>
           )}
           <Divider />
-          <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
             <Typography sx={{ fontWeight: 700 }}>К оплате</Typography>
             <Typography sx={{ fontWeight: 700 }}>{formatPrice(total)}</Typography>
           </Stack>

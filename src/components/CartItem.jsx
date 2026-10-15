@@ -37,7 +37,7 @@ function CartItem({ item, onChangeQuantity, onRemove }) {
         </Typography>
       </Box>
 
-      <Stack direction="row" alignItems="center" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
         <IconButton
           aria-label={`Уменьшить количество: ${product.title}`}
           onClick={() => onChangeQuantity(product.id, -1)}
@@ -55,7 +55,7 @@ function CartItem({ item, onChangeQuantity, onRemove }) {
         </IconButton>
       </Stack>
 
-      <Stack direction="row" alignItems="center" spacing={1} sx={{ justifySelf: { sm: 'end' } }}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifySelf: { sm: 'end' } }}>
         <Typography sx={{ fontWeight: 700 }}>{formatPrice(unitPrice * quantity)}</Typography>
         <IconButton
           color="error"

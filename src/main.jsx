@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import './index.css';
 import App from './App.jsx';
+import CartProvider from './context/CartProvider';
 import { muiTheme } from './theme/muiTheme';
 
 createRoot(document.getElementById('root')).render(
@@ -12,7 +13,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ThemeProvider theme={muiTheme}>
         <CssBaseline />
-        <App />
+        <CartProvider>
+          <App />
+        </CartProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>

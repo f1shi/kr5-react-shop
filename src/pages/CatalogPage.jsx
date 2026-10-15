@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Alert, Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Alert, Box, Button, Typography } from '@mui/material';
 import { getProducts } from '../api/productsApi';
 import CatalogControls from '../components/CatalogControls';
 import { useCart } from '../hooks/useCart';
+import ProductCardSkeleton from '../components/ProductCardSkeleton';
 import ProductList from '../components/ProductList';
 import { getPreparedProducts } from '../utils/productUtils';
 
@@ -68,9 +69,19 @@ function CatalogPage() {
   if (isLoading) {
     return (
       <main className="app-main">
-        <Box sx={{ display: 'grid', placeItems: 'center', minHeight: 240 }}>
-          <CircularProgress />
-          <Typography sx={{ mt: 2 }}>Загрузка товаров...</Typography>
+        <Typography role="status" sx={{ mb: 2 }}>
+          Загрузка товаров...
+        </Typography>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: 3
+          }}
+        >
+          {Array.from({ length: 6 }, (_, index) => (
+            <ProductCardSkeleton key={index} />
+          ))}
         </Box>
       </main>
     );

@@ -1,5 +1,6 @@
-import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { CATEGORIES } from '../utils/categories';
 
 function HomePage() {
   return (
@@ -21,6 +22,25 @@ function HomePage() {
             </Button>
           </Stack>
         </Box>
+      </Paper>
+
+      <Paper component="section" elevation={2} sx={{ p: 4, mt: 3 }} aria-labelledby="home-categories-title">
+        <Typography id="home-categories-title" variant="h5" component="h2" gutterBottom>
+          Категории
+        </Typography>
+        <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+          {CATEGORIES.map((category) => (
+            <Chip
+              key={category.value}
+              label={category.label}
+              component={Link}
+              to={`/catalog?category=${category.value}`}
+              clickable
+              color="primary"
+              variant="outlined"
+            />
+          ))}
+        </Stack>
       </Paper>
     </main>
   );

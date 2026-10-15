@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Alert, Box, Button, Pagination, Typography } from '@mui/material';
 import { getProducts } from '../api/productsApi';
 import CatalogControls from '../components/CatalogControls';
@@ -15,10 +16,33 @@ function CatalogPage() {
   const [error, setError] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortType, setSortType] = useState('default');
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get('category') || 'all');
+  const [sortType, setSortType] = useState(() => searchParams.get('sort') || 'default');
+  const [page, setPage] = useState(() => Number(searchParams.get('page')) || 1);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams();
+
+    if (searchQuery) {
+      nextParams.set('q', searchQuery);
+    }
+
+    if (selectedCategory !== 'all') {
+      nextParams.set('category', selectedCategory);
+    }
+
+    if (sortType !== 'default') {
+      nextParams.set('sort', sortType);
+    }
+
+    if (page > 1) {
+      nextParams.set('page', String(page));
+    }
+
+    setSearchParams(nextParams, { replace: true });
+  }, [searchQuery, selectedCategory, sortType, page, setSearchParams]);
   const { totalCount, addToCart } = useCart();
   const [addedMessage, setAddedMessage] = useState('');
 
